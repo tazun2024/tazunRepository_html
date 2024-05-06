@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExecBS>
+    <!-- チャート値を取得せずにこの値を使う -->
+    <Debug>
+        <Date>2022-12-03 20:00</Date>
+        <Price>999</Price>
+    </Debug>
+</ExecBS>

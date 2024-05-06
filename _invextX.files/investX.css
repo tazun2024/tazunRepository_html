@@ -1,0 +1,155 @@
+
+A {
+	FONT-SIZE: 80%;
+	COLOR: #7F7FFF;
+}
+
+.box
+        {
+        clear:both;
+        border-top:solid 10px #D2D2FF;
+        border-bottom:solid 1px #D2D2FF;
+        border-left:solid 1px #D2D2FF;
+        border-right:solid 1px #D2D2FF;
+        }
+
+table.test_link td {
+height: 48px;
+padding: 2px 8px;
+background-color:#FFFFFF;
+}
+
+table.test_link td.nallow {
+padding: 2px 4px;
+}
+
+
+
+tablearea{
+width:100%;
+height:30%;
+}
+
+
+
+td.even {
+  background-color: #e4e4ff;
+}
+
+
+
+H1.submenu {
+	FONT-SIZE: 100%;
+	width:85%; text-align:left;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #fff; PADDING-TOP: 4px; BACKGROUND: #a9c0ce
+}
+
+
+DIV.titleLink {
+	FONT-SIZE: 120%;
+	text-align:left;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #fff; PADDING-TOP: 4px;
+}
+
+
+td.simuParamKey {
+font-weight:bold;
+text-align:center;
+}
+
+td.simuParamValue {
+text-align:center;
+}
+
+td.simuParamValue {
+text-align:center;
+}
+
+input[type=checkbox] {
+width:32px;
+height:32px;
+box-shadow:inset 1px 2px 3px 0px #000;
+}
+
+input[type=text] {
+width:100%;
+padding:10px 15px;
+font-size:20px;
+border-radius:3px;
+border:2px solid #e4e4ff;
+box-sizing:border-box;
+letter-spacing:1px;
+}
+
+
+
+/* 新しいタブ */
+/* 新しいタブ */
+.cmxTabWrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+.cmxTab {
+    font-weight:bold;
+    color: White;
+    background: LightGray;
+    margin-right: 5px;
+    padding: 3px 12px;
+    order: -1;
+}
+.cmxTab-content {
+    width: 100%;
+     /* <div class=cmxTab-content>～</div>を非表示 */
+    display: none;
+}
+.cmxTabSwitch:checked+.cmxTab+.cmxTab-content {
+     /* <div class=cmxTab-content>～</div>を表示 */
+     display: block;
+}
+/* アクティブなタブ */
+.cmxTabSwitch:checked+.cmxTab {
+    color: Black;
+    background: #D2D2FF;
+}
+/* ラジオボタン非表示 */
+.cmxTabSwitch {
+     /* いわゆる非表示 */
+    display: none;
+}
+
+
+/* <a>タグのリンクボタン */
+/* <a>タグのリンクボタン */
+#linkButton {
+  margin: 5px;
+  padding: 5px;
+  /* <font size=-1>SIMU_TRENDREPORT</font>に合わせてあります */
+  width: 148px;
+  text-align: center;
+  background-color: #D2D2FF;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#linkButton a {
+  text-decoration: none;
+  font-weight: bold;
+}
+#linkButton:hover{
+filter:alpha(opacity=80);
+opacity:0.8;
+}
+#linkButton:active {
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+
+
+/* リンクボタンを配置する画面左側エリア */
+/* リンクボタンを配置する画面左側エリア */
+.commandButonLeftArea{
+/* ----レイアウト確認用 ----
+  background-color: black;
+*/
+  display:flex;
+}

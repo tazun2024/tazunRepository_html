@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0029)http://www9.ocn.ne.jp/~tazun/ -->
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE><?php echo $VIEW["TITLE"];?></TITLE>
+<meta name="viewport" content="width=device-width">
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<META content="MSHTML 6.00.2900.5726" name=GENERATOR>
+<META http-equiv=Content-Style-Type content=text/css>
+</HEAD>
+
+<BODY>
+
+
+
+
+
+<?php if ($VIEW['ERRORMSG'] <> '') : echo $VIEW['ERRORMSG']; else : ?>
+
+
+<style type='text/css'>
+
+.example{
+  margin: 10px auto;
+  width:85%;
+  height: 200px;
+}
+
+.yellow{
+  margin: 10px;
+  background-color: lightgray;
+  width: 220px;
+  height: 900px;
+  float: left;
+}
+
+.green{
+  background-color: green;
+  width: 400px;
+  height: 100px;
+  float: left;
+}
+
+.pink{
+  background-color: pink;
+  width: 500px;
+  height: 50px;
+  clear: left;
+}
+
+</style>
+
+<div class=example>
+
+
+<div class='yellow'>
+<font size=-1>
+          <?php foreach($VIEW['LEFTCONTENTS'] as $contentsRow):?>
+          <?php   echo $contentsRow;?>
+          <?php endforeach;?>
+</font>
+</div>
+
+
+<div class='green'>
+
+<table border=1 width=320>
+<tr>
+<td>参考値</td>
+</tr>
+</table>
+
+          <?php foreach($VIEW['RIGHTCONTENTS'] as $contentsRow):?>
+          <?php   echo $contentsRow;?>
+          <?php endforeach;?>
+
+
+          <!--  2022.09.30 -->
+          <!--  新しいタブ -->
+          <tr><td colspan=2 style="word-break:break-all; font-size:small;">
+          <style type=text/css>
+          .cmxTabWrap {display:flex; flex-wrap: wrap;}
+          .cmxTab {font-size:small; font-weight:bold; color:White; background:LightGray; margin-right:5px; padding:3px 12px; order:-1;}
+          .cmxTab-content {width:100%; display:none;}
+          .cmxTabSwitch:checked+.cmxTab+.cmxTab-content {display:block;}
+          .cmxTabSwitch:checked+.cmxTab {color:Black; background: #D2D2FF;}
+          .cmxTabSwitch {display:none;}
+          </style>
+
+          <div class=cmxTabWrap>
+          <input id=TAB-OFF type=radio name=TAB value=1 class=cmxTabSwitch checked=checked />
+          <label class=cmxTab for=TAB-OFF>ログステータス非表示</label>
+          <div class=cmxTab-content>
+          </div>
+          <input id=TAB-ON type=radio name=TAB value=2 class=cmxTabSwitch  />
+          <label class=cmxTab for=TAB-ON>表示</label>
+          <div class=cmxTab-content>
+          <?php foreach($VIEW['LOGMSG'] as $contentsRow):?>
+          <?php   echo $contentsRow.'<br>';?>
+          <?php endforeach;?>
+          </div>
+          </div>
+          </td></tr>
+          <!--  2022.09.30 -->
+</div>
+
+
+</div>
+
+
+<?php endif; ?>
+
+</BODY>
+</html>

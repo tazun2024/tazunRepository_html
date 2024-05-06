@@ -1,0 +1,9 @@
+<?PHP
+$logArr = array();
+$logArr[] = '一般銘柄';
+$logArr[] = '$bachuTmpRequest[DONE]';
+$logArr[] = '$sixClrPtn[E]';
+$logArr[] = '$leastDateTime[]';
+$logArr[] = "\$executeQuery[select date, open_value, high_value, low_value, close_value, volume_value from DAILY_CHART where meigara_cd = '1332' and date <= '2022-10-03 15:15' order by date desc LIMIT 159]";
+$logArr[] = 'case else $chartTmpArr[0]<br>取得数[159]は規定数（159）にピッタリ！<br>、、、$bachuTmp=[DONE]<br>/var/www/html/BillionStuff/^act/MY_MASUDAASHI/_fileWork/1332target.gif<br>';
+?>

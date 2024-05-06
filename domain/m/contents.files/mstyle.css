@@ -1,0 +1,249 @@
+
+ .TOP {
+PADDING-RIGHT: 4px; PADDING-LEFT: 4px; FONT-SIZE: 80%; BORDER-LEFT-COLOR: whitesmoke; BORDER-BOTTOM-COLOR: gainsboro; PADDING-BOTTOM: 2px; BORDER-TOP-STYLE: solid; BORDER-TOP-COLOR: whitesmoke; LINE-HEIGHT: 200%; PADDING-TOP: 2px; BORDER-RIGHT-STYLE: solid; BORDER-LEFT-STYLE: solid; BACKGROUND-COLOR: gainsboro; BORDER-RIGHT-COLOR: gainsboro; BORDER-BOTTOM-STYLE: solid;
+}
+ .TOPHOME {
+PADDING-RIGHT: 16px; PADDING-LEFT: 16px; FONT-SIZE: 80%; BORDER-LEFT-COLOR: whitesmoke; BORDER-BOTTOM-COLOR: gainsboro; PADDING-BOTTOM: 4px; BORDER-TOP-STYLE: solid; BORDER-TOP-COLOR: whitesmoke; LINE-HEIGHT: 200%; PADDING-TOP: 4px; BORDER-RIGHT-STYLE: solid; BORDER-LEFT-STYLE: solid; BACKGROUND-COLOR: gainsboro; BORDER-RIGHT-COLOR: gainsboro; BORDER-BOTTOM-STYLE: solid;
+}
+
+IMG {
+	MARGIN: 3px; BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none
+}
+
+H1 {
+	FONT-SIZE: 120%;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #fff; PADDING-TOP: 4px; BACKGROUND: #a9c0ce
+}
+H1.nbWebIzi {
+	FONT-SIZE: 120%;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #663300; PADDING-TOP: 4px; BACKGROUND: wheat;
+}
+H2 {
+	FONT-SIZE: 120%;COLOR: gray;
+}
+H3 {
+	FONT-SIZE: 70%;COLOR: gray;
+}
+H1_PHP {
+display: block;
+-webkit-margin-before: 0.67em;
+-webkit-margin-after: 0.67em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+font-weight: bold;
+	FONT-SIZE: 120%;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #fff; PADDING-TOP: 4px; BACKGROUND: #01A498
+}
+
+A {
+	FONT-SIZE: 80%;
+	COLOR: #e0691a;
+}
+
+A.norikae {
+	FONT-SIZE: 100%;
+	COLOR: royalblue;
+	text-decoration: none;
+}
+A.norikae:hover {
+	FONT-SIZE: 100%;
+	COLOR: navy;
+}
+
+A.sch {
+	FONT-SIZE: 100%;
+	COLOR: dimgray;
+}
+
+B {
+	COLOR: red;
+}
+
+INPUT {
+	FONT-SIZE: 60%;
+}
+
+P.segmentInfo {
+	FONT-SIZE: 11px;
+	COLOR=gray;
+}
+
+
+
+
+/* ----------------------------------------
+スタイル変更中のtemp
+---------------------------------------- */
+H1.subTips {
+	FONT-SIZE: 200%;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; BACKGROUND: #222222; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #ff0; PADDING-TOP: 4px; BACKGROUND: wheat;
+}
+DIV.hogeFull {
+	FONT-SIZE: 200%;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; BACKGROUND: #222222; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #ff0; PADDING-TOP: 4px; BACKGROUND: wheat;
+}
+H1.segmentInfo {
+	FONT-SIZE: 290%;
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; BACKGROUND: #222222; PADDING-BOTTOM: 4px; MARGIN: 0px 0px 3px; COLOR: #fff; PADDING-TOP: 4px; BACKGROUND: mediumslateblue;
+}
+/* ----------------------------------------
+マージンはパディングとセットで覚えるのが良いと思います。
+	値を1つ指定した場合：指定した値が[上下左右]のマージン
+	値を2つ指定した場合：記述した順に[上下][左右]のマージン
+	値を3つ指定した場合：記述した順に[上][左右][下]のマージン
+	値を4つ指定した場合：記述した順に[上][右][下][左]のマージン
+---------------------------------------- */
+
+
+
+.nbWebIzi_main {
+width: 300px;
+color: #323232;
+line-height: 1.5em;
+}
+.cttsBox {
+margin-bottom: 20px;
+padding-bottom: 7px;
+background: url(../contents.files/bg_bottom.png) no-repeat 0 bottom;
+margin-top: 20px;
+}
+
+.cttsBox .inner {
+padding: 5px 5px 10px;
+background-color: #fff;
+border: 1px solid #c9c9c9;
+}
+
+.cttsBox .Ctgory {
+margin: 10px 0 0;
+border-bottom: 3px solid #d6d6d6;
+}
+
+.cttsBox .body {
+padding: 10px 10px 0;
+}
+
+.cttsBox .ttl {
+border-left: 5px solid #666;
+padding: 2px 0 2px 5px;
+margin: 10px 0 5px;
+font-weight: bold;
+line-height: 1.2em;
+}
+
+div.cttsBox dl, div.cttsBox dd, div.cttsBox ul, div.cttsBox h1 {
+/*
+　山本伸のマージン用に<Tx>タグを作りました。
+　<dd>タグを使わなくなったので div.cttsBox dd は不要に思えますが、
+　山本伸以外のページで―「素敵な文語探し」など、で使っている<dd>タグに影響がでます。
+　
+　従って削除できません、
+*/
+margin: 0;
+padding: 0;
+list-style:none;
+}
+.Ctgory span {
+font-size: 85%;
+color: #626262;
+}
+
+.mtext Tx {
+padding: 0 0 0 5px;
+}
+.mtext Ti {
+color: darkorange;
+}
+.mtext Sth {
+color: white;
+}
+
+
+.cttsBox .surDate {
+font-size: 75%;
+color: #626262;
+line-height: 0;
+}
+
+.cttsBox .mText {
+/*
+　URLなどの強制改行に対応
+*/
+white-space: pre;           /* CSS 2.0 */
+white-space: pre-wrap;      /* CSS 2.1 */
+white-space: pre-line;      /* CSS 3.0 */
+white-space: -pre-wrap;     /* Opera 4-6 */
+white-space: -o-pre-wrap;   /* Opera 7 */
+white-space: -moz-pre-wrap; /* Mozilla */
+white-space: -hp-pre-wrap;  /* HP Printers */
+word-wrap: break-word;      /* IE 5+ */
+
+text-indent:0.5em;
+font-size: 85%;
+}
+
+
+
+.cttSection table {
+	border-top : 1px solid #b3b3b3 ;
+	border-left : 1px solid #b3b3b3 ;
+	margin-bottom : 14px ;
+	border-collapse: collapse ;
+	width: 30%;
+}
+
+.cttSection table th {
+	border-right : 1px solid #b3b3b3 ;
+	border-bottom : 1px solid #b3b3b3 ;
+	padding : 6px 8px ;
+	background-color : #666 ;
+	color : #fff ;
+	FONT-SIZE: 80%;
+}
+
+.cttSection table td {
+	border-right : 1px solid #b3b3b3 ;
+	border-bottom : 1px solid #b3b3b3 ;
+	padding : 6px 8px ;
+	FONT-SIZE: 80%;
+	COLOR: gray;
+}
+.cttSection table td A {
+	FONT-SIZE: 100%;
+	COLOR: #e0691a;
+}
+
+.cttSection div {
+  position: relative;
+}
+
+
+span:hover + p.arrow_box {
+  display: block;
+}
+
+.arrow_box {
+  display: none;
+  position: absolute;
+  padding: 16px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;  
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+}
+
+.arrow_box:after {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -10px;
+  border: solid transparent;
+  border-color: rgba(51, 51, 51, 0);
+  border-bottom-color: #333;
+  border-width: 10px;
+  pointer-events: none;
+  content: " ";
+}

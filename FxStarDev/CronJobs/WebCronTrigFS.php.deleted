@@ -1,0 +1,183 @@
+<?php
+
+    // シャットダウンシーケンスを設定
+    register_shutdown_function('my_shutdown_handler');
+
+
+    // ==== ==== ==== ====
+    // ==== ==== ==== ==== 環境定数【環境依存】
+    // ==== ==== ==== ====
+    include('../_fsEnv.cfg');
+
+
+    echo '<html><head><title>WebCron '.APP_TYPE.'</title></head>';
+
+    if (@$_REQUEST['ACTION'] == APP_TYPE.'_WebCronTrig') {
+
+      echo '<body>';
+
+      // ==== ==== ==== ====
+      // ==== ==== ==== ==== 定数設定
+      // ==== ==== ==== ====
+    //define('DOMAIN_ROOT', HTML_ROOT.'domain/');
+
+
+      // ==== ==== ==== ====
+      // ==== ==== ==== ==== 必要なファイルをinclude
+      // ==== ==== ==== ====
+      include(APP_ROOT.'COMMON/Cfg/InvestxCfg.php');
+      include(APP_ROOT.'COMMON/Log/CmxLog.php');
+      include(APP_ROOT.'COMMON/Mail/CmxMailSender.php');
+      include(APP_ROOT.'COMMON/Mail/_MAILconf.php');
+      include(APP_ROOT.'COMMON/Util/NewSimpleUtil.php');
+      include(APP_ROOT.'COMMON/Util/InvestxNewUtil.php');
+      include(APP_ROOT.APP_TYPE.'/Util/FSUtil.php');
+
+      //////// ログ生成
+      $myCmxLog = new CmxLog(APP_ROOT.APP_TYPE.'/CronJobs/Logs/'.APP_TYPE.'_WebCronTrig'.date('Ymd_H00').'.log');
+      $myCmxLog->infEcho('>>execute WebCronTrigFS');
+
+      //////// 2022.10.04 完全移行までログレベルは「詳細」
+      $myCmxLog->setLoggingLevel(CmxLog::T_LOGGING_DEBUG);
+
+
+      // ======== 今TICK動作基本情報の生成
+      $xmlData = (file_exists(__DIR__.'/ExecFS.xml')) ? simplexml_load_file (__DIR__.'/ExecFS.xml') : false;
+      if ($xmlData !== false) {
+
+          // ==== ==== ==== ====
+          // ==== ==== ==== ==== 直下のExecFS.xmlファイルで挙動を決められる
+          // ==== ==== ==== ====
+          // ==== ==== ==== ==== ・debug制御として動作する
+          // ==== ==== ==== ==== ・動作日時をExecFS.xmlファイルに設定されたもので動作する
+          // ==== ==== ==== ==== ・チャート値は「既に登録されているもの」として、その値で動作する
+          // ==== ==== ==== ====
+          $myFSUtil = new FSUtil($myCmxLog, FSUtil::T_CMX_DEBUG);
+          $myTickDone = $myFSUtil->getTickDone(getRoudDTime(strtotime($xmlData->Debug->Date)));
+          $currentChartValue = new stdClass;
+          $currentChartValue->DTIME = strtotime(strval($xmlData->Debug->Date));
+          $currentChartValue->PRICE = (object)['BID'=>INVESTX_NOT_APPLICABLE_NUMBER, 'ASK'=>INVESTX_NOT_APPLICABLE_NUMBER]; // ¶FSUtil::T_CMX_DEBUGの場合は既登録値を取得して進める
+          $myTickDone->setChart($currentChartValue);
+
+      } else {
+
+          $showTargetDtime = getRoudDTime(time());
+        //$currentDtime = strtotime('2022-07-25 12:15');
+
+          // ======== webCron制御として今TICK動作基本情報クラスを生成する
+          $myFSUtil = new FSUtil($myCmxLog, FSUtil::T_CMX_WEBCRON);
+        //$myFSUtil = new FSUtil($myCmxLog, FSUtil::T_CMX_CRON);
+          $myTickDone = $myFSUtil->getTickDone($showTargetDtime);
+
+          $myCmxLog->infEcho('tickDone->TRIGGER['.$myTickDone->getTrigger().']');
+          $myCmxLog->infEcho('tickDone->DTIME['.date('Y-m-d H:i', $myTickDone->getDTime()).']');
+      }
+
+
+      // ==== ==== ==== ====
+      // ==== ==== ==== ==== セッション中であれば起動をかける
+      // ==== ==== ==== ====
+      if ($myTickDone->getSession()->isOnSession()) {
+
+          include(APP_ROOT.APP_TYPE.'/CronJobs/ExecFS.php');
+          $myExecFS = new ExecFS($myTickDone);
+
+          $myExecFS->exec_done();
+      }
+
+
+      // ==== ==== ==== ====
+      // ==== ==== ==== ==== ACTIONがあれば起動をかける
+      // ==== ==== ==== ====
+      if (count($myTickDone->getAction()) > 0) {
+
+          $myCmxLog->inf('定時処理 開始');
+
+          foreach($myTickDone->getAction() as $action) {
+
+              $myCmxLog->inf('::ACTION['.$action.']');
+              switch ($action) {
+
+                  case T_FS_DAILY_DELETEFILES:
+                      // ==== 指定配下のファイル削除処理
+                      define('SIMUFILE_PREFIX', FSUtil::T_CMX_SIMULATION); // ¶SIMUFILE_PREFIX⇒~CronJobs/Logs/の シミュレーションログ.zip をハウスキーピング
+                      include(APP_ROOT.'COMMON/CronJobsActionTask/ActionTask_DailyDeleteFiles.php');
+                      break;
+
+                  case T_FS_DAILY_COMPENV_ZIP:
+                      // ==== 動作環境の日次バックアップ ◆◆HTML_ROOT配下を圧縮するのでBillionStuff側と同じことをしている（domain配下を誰が圧縮するか決まれば、各自が自分の資源だけを圧縮処理対象にできる）
+                      define('FILE_PREFIX', FSUtil::T_CMX_CRON);
+                      include(APP_ROOT.'COMMON/CronJobsActionTask/ActionTask_DailyCompEnvZip.php');
+                      break;
+
+                  case T_FS_MONTHLY_COMPLOGS_ZIP:
+                      // ==== ログの月次圧縮処理をする
+                      define('FILE_PREFIX', FSUtil::T_CMX_CRON);
+                      include(APP_ROOT.'COMMON/CronJobsActionTask/ActionTask_MonthlyCompLogsZip.php');
+                      break;
+
+                  case T_FS_MONTHLY_SHINNEASHIROOT:
+                      // ==== 新値足rootのメンテナンスをする
+                      include(APP_ROOT.APP_TYPE.'/CronJobs/ActionTask_FSMonthlyMaintenanceShinneashiRoot.php');
+                      break;
+
+                      // 2022.11.03 暫定リリース
+                      // 2022.12.03 AUDと同タイミングの起動だと「Error. Cannot declare interface AdminDao_interface, because the name is already in use in」します
+                  case T_FS_MONTHLY_SHINNEASHIROOT_USD:
+                      // ==== 新値足rootのメンテナンスをする
+                      $myTickDone->setSymbolType(CoreBase::T_USD5M);
+                      include(APP_ROOT.APP_TYPE.'/CronJobs/ActionTask_FSMonthlyMaintenanceShinneashiRootUSD.php');
+                      break;
+              }
+          }
+
+          $myCmxLog->inf('定時処理 終了');
+      }
+
+
+      $myCmxLog->infEcho('>>terminate WebCronTrigFS');
+
+      echo '<body>';
+
+    } else {
+
+      echo '<body>'.date('Y-m-d H:i').'</body>';
+
+    }
+
+    echo '<html>';
+
+
+
+
+
+
+
+
+    // ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====                    ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====
+    // ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====  shutdownハンドラ  ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====
+    // ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====                    ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====
+    function my_shutdown_handler(){
+
+      $error = error_get_last();
+
+      if(empty($error)) return;
+
+      switch($error['type']){
+          case(E_ERROR):   $type = "Fatal Error"; break;
+          case(E_WARNING): $type = "Warning"; break;
+          case(E_NOTICE):  $type = "Notice"; break;
+          default:         $type = "Error";
+      }
+
+
+      var_dump($error);
+
+      $date = new DateTime();
+      $line = sprintf("%s: %s. %s in %s on line %s\n", $date->format('Y-m-d H:i:s'), $type, $error['message'], $error['file'], $error['line']);
+      file_put_contents(dirname(__FILE__) . '/_'.APP_TYPE.'_shutdown_handler.log', $line, FILE_APPEND | LOCK_EX);
+    }
+    // ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====                    ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====
+    // ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====  shutdownハンドラ  ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====
+    // ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====                    ==== ==== ==== ====  ==== ==== ==== ==== ==== ==== ==== ====  ==== ==== ==== ====
+?>

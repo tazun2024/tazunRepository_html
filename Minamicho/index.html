@@ -1,0 +1,30 @@
+
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<!-- saved from url=(0029)http://www9.ocn.ne.jp/~tazun/ -->
+<HTML xmlns=\"http://www.w3.org/1999/xhtml\">
+<HEAD>
+<TITLE>Minamicho</TITLE>
+<meta name="viewport" content="width=device-width">
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+</HEAD>
+<BODY>
+
+<?php foreach($view["HEADER"] as $element):?>
+  <?php echo $element;?>
+<?php endforeach;?>
+
+<table>
+  <?php foreach($view["TRTAG"] as $trtagArr):?>
+  <tr>
+    <?php foreach($trtagArr as $tdtag):?>
+      <td>&nbsp;<?=$tdtag;?>&nbsp;</td>
+    <?php endforeach;?>
+  </tr>
+  <?php endforeach;?>
+</table>
+
+<BR>
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,11 @@
+2022-12-03 20:13:04: Fatal Error. Uncaught Exception: NOT EXIST CHART ELEMENT 2022-12-03 20:00 in C:\_developmentWork\PHP_appResource\BillionStuffDev\CronJobs\ExecBS.php:199
+Stack trace:
+#0 C:\_developmentWork\xampp\htdocs\html\BillionStuffDev\CronJobs\WebCronTrigBS.php(93): ExecBS->exec_done()
+#1 {main}
+  thrown in C:\_developmentWork\PHP_appResource\BillionStuffDev\CronJobs\ExecBS.php on line 199
+2022-12-03 20:16:39: Notice. Use of undefined constant T_BS_MONTHLY_SHINNEASHIROOT - assumed 'T_BS_MONTHLY_SHINNEASHIROOT' in C:\_developmentWork\PHP_appResource\BillionStuffDev\Util\BSUtil.php on line 230
+2022-12-03 20:24:03: Notice. Use of undefined constant T_BS_MONTHLY_SHINNEASHIROOT - assumed 'T_BS_MONTHLY_SHINNEASHIROOT' in C:\_developmentWork\PHP_appResource\BillionStuffDev\Util\BSUtil.php on line 230
+2022-12-03 20:28:42: Notice. Use of undefined constant T_BS_MONTHLY_SHINNEASHIROOT - assumed 'T_BS_MONTHLY_SHINNEASHIROOT' in C:\_developmentWork\PHP_appResource\BillionStuffDev\Util\BSUtil.php on line 230
+2022-12-03 20:29:00: Error. Declaration of MaintenanceShinneashiRoot::retryTask($taskKeyword, $retryCount, $retryParams) must be compatible with CmxRetry_interface::retryTask(string $taskKeyword, int $retryCount, stdClass $retryParams) in C:\_developmentWork\PHP_appResource\BillionStuffDev\CronJobs\ActionTask_BSMonthlyMaintenanceShinneashiRoot.php on line 26
+2022-12-03 20:30:47: Error. Declaration of MaintenanceShinneashiRoot::retryTask($taskKeyword, $retryCount, $retryParams) must be compatible with CmxRetry_interface::retryTask(string $taskKeyword, int $retryCount, stdClass $retryParams) in C:\_developmentWork\PHP_appResource\BillionStuffDev\CronJobs\ActionTask_BSMonthlyMaintenanceShinneashiRoot.php on line 26
+2022-12-03 20:31:41: Notice. Use of undefined constant T_BS_MONTHLY_SHINNEASHIROOT - assumed 'T_BS_MONTHLY_SHINNEASHIROOT' in C:\_developmentWork\xampp\htdocs\html\BillionStuffDev\CronJobs\WebCronTrigBS.php on line 127

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExecBS>
+    <Debug>
+        <!-- この時刻で処理をする -->
+        <Date>2022-10-14 17:20</Date>
+        <!-- その時刻のチャート値が既に登録済みであればそれを使って処理をする -->
+        <bid>999</bid>
+        <ask>999</ask>
+    </Debug>
+</ExecBS>
