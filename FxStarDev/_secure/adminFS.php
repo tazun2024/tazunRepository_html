@@ -53,7 +53,7 @@ $contentsArr[] = '</form>';
 $contentsArr[] = '<H1 class=submenu>FS_ADMIN コンテンツ</H1>';
 
 $linkArr = array(
-    'cron USD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_USD5M)."' and (side like 'WV_%' or side like '%ZONE' or side in ('SPT', 'RGT', 'LSA_TJM', 'LSB_TJM', 'LST_TTG', 'A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE', 'LSTCZONE') ) order by side, date", 'dTimeColumn' => 'date'),
+    'cron USD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_USD5M)."' and (side in ('A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE') ) order by side, date", 'dTimeColumn' => 'date'),
     'cron USD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FSUSD' order by side, date", 'dTimeColumn' => 'date'),
     'simu USD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'SM_FSUSD' order by side, date", 'dTimeColumn' => 'date'),
     '新値足rootUSD' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = '".CoreBase::getSinneashiMeigaraCd(CoreBase::T_USD5M)."' order by date", 'dTimeColumn' => 'date')
@@ -62,7 +62,7 @@ $contentsArr = array_merge($contentsArr, html_getSelectTableLinkMenu('FS_ADMIN<b
 $contentsArr[] = '<br><HR align=left width=80% color=silver>';
 
 $linkArr = array(
-    'cron AUD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_AUD5M)."' and (side like 'WV_%' or side like '%ZONE' or side in ('SPT', 'RGT', 'LSA_TJM', 'LSB_TJM', 'LST_TTG', 'A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE', 'LSTCZONE') ) order by side, date", 'dTimeColumn' => 'date'),
+    'cron AUD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_AUD5M)."' and (side in ('A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE') ) order by side, date", 'dTimeColumn' => 'date'),
     'cron AUD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FSAUD' order by side, date", 'dTimeColumn' => 'date'),
     'simu AUD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'SM_FSAUD' order by side, date", 'dTimeColumn' => 'date'),
     '新値足rootAUD' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = '".CoreBase::getSinneashiMeigaraCd(CoreBase::T_AUD5M)."' order by date", 'dTimeColumn' => 'date')

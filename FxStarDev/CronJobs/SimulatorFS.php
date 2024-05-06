@@ -22,7 +22,7 @@
     include(APP_ROOT.'COMMON/Cfg/InvestxCfg.php');
     include(APP_ROOT.'COMMON/Log/CmxLog.php');
     include(APP_ROOT.'COMMON/Mail/CmxMailSender.php');
-    include(APP_ROOT.'COMMON/Mail/_MAILconf.php');
+    // 2023.12.28 include(APP_ROOT.'COMMON/Mail/_MAILconf.php');
     include(APP_ROOT.'COMMON/Util/NewSimpleUtil.php');
     include(APP_ROOT.'COMMON/Util/InvestxNewUtil.php');
     include(APP_ROOT.APP_TYPE.'/Util/FSUtil.php');
