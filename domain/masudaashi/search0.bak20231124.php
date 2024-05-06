@@ -87,7 +87,7 @@
         $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1003'.$sixClrDistributionLinkStr.'>1003 米ドル／円</a><br>';
         $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1081'.$sixClrDistributionLinkStr.'>1081 ダウ工業株３０種平均</a><br>';
         $leftContentsArr[] = '<hr>';
-        $leftContentsArr[] = '<a href=https://cmx.boy.jp/html/domain/masudaashi/search.php?TARGET_CD='.$targetCode.$sixClrDistributionLinkStr.'>'.$targetCode.'</a><br>';
+        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=7974'.$sixClrDistributionLinkStr.'>7974 任天堂</a><br>';
 
 
 
