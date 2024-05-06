@@ -145,7 +145,7 @@ function html_getMainSelectTableLinkMenu(array $parameterArr, int $selectedNumbe
         foreach ($parameterArr as $menuElement) {
 
             //// ==== name=TABでグループ化されたラジオボタン、<a>タグPOSTでname=TABの値が$countで決まるvalue値で連携される
-            $resultArr[] = '<input id=TAB-'.strval($count).' type=radio name=TAB value='.strval($count).' class=cmxTabSwitch '.($count == $selectedNumber ? 'checked=checked' : '').' /><label class=cmxTab for=TAB-'.strval($count).'>'.$menuElement->NAME.'</label>';
+            $resultArr[] = '<input id=TAB-'.strval($count).' type=radio name=TAB value='.strval($count).' class=cmxTabSwitch '.($count == $selectedNumber ? 'checked=checked' : '').' /><label class=cmxTab for=TAB-'.strval($count).'>&nbsp;'.$menuElement->NAME.'&nbsp;</label>';
             $resultArr[] = '<div class=cmxTab-content>';
 
             foreach ($menuElement->CONTENTS as $contentsRow) {
@@ -194,7 +194,7 @@ function html_getLinkButon(string $labelName, string $linkStr, string $targetStr
  * @param string $theMeigaraCd 日時の表示形式が$theMeigaraCdによって変わる汎用性
  * @return array
  */
-function html_getChartTable(array $chartArr, CreateShinneashi $myShinneashi, string $theMeigaraCd) {
+function html_getChartTable(array $chartArr, CreateShinneashi $myShinneashi = null, string $theMeigaraCd) {
 
     $resultArray = array();
 
@@ -202,24 +202,43 @@ function html_getChartTable(array $chartArr, CreateShinneashi $myShinneashi, str
 
         $resultArray[] = '<tr>';
 
-        $tmpShinnneashiElement = $myShinneashi->getElement_dtime(strtotime($chartElement->date), 0);
-        if (strtotime($tmpShinnneashiElement->date) == strtotime($chartElement->date)) {
+        if ($myShinneashi != null) {
 
-            //// ==== この日時（$chartElement->date）に新値足がある場合はそれが採用される
-            $resultArray[] = $myShinneashi->html_getShinneashiStatus($tmpShinnneashiElement);
+
 
         } else {
 
             $resultArray[] = '<td>&nbsp;</td>';
         }
 
-        //// ==== 画面表示エリアが狭いので短縮形の日時表記で固定
-        $resultArray[] = '<td>'.date('n/j H:i', strtotime($chartElement->date)).'</td>';
-        $resultArray[] = '<td>'.$myShinneashi->getMasudaashi()->writeSixPtnValue($myShinneashi->getMasudaashi()->getElementNum_DTime(strtotime($chartElement->date))).'</td>';
+        if ($myShinneashi != null) {
 
+
+        } else {
+
+            $resultArray[] = '<td>&nbsp;</td>';
+        }
         switch($theMeigaraCd) {
 
             case CoreBase::T_N225M:
+
+                //// 新値足表示
+                $tmpShinnneashiElement = $myShinneashi->getElement_dtime(strtotime($chartElement->date), 0);
+                if (strtotime($tmpShinnneashiElement->date) == strtotime($chartElement->date)) {
+
+                    //// ==== この日時（$chartElement->date）に新値足がある場合はそれが採用される
+                    $resultArray[] = $myShinneashi->html_getShinneashiStatus($tmpShinnneashiElement);
+
+                } else {
+
+                    $resultArray[] = '<td>&nbsp;</td>';
+                }
+
+                //// ==== 画面表示エリアが狭いので短縮形の日時表記で固定
+                $resultArray[] = '<td>'.date('n/j H:i', strtotime($chartElement->date)).'</td>';
+
+                //// 増田足6色パターン
+                $resultArray[] = '<td>'.$myShinneashi->getMasudaashi()->writeSixPtnValue($myShinneashi->getMasudaashi()->getElementNum_DTime(strtotime($chartElement->date))).'</td>';
 
                 $resultArray[] = '<td>'.$myShinneashi->getPriceColumnValueStr($chartElement->close_value).'</td>';
                 break;
@@ -227,13 +246,51 @@ function html_getChartTable(array $chartArr, CreateShinneashi $myShinneashi, str
             case CoreBase::T_AUD5M:
             case CoreBase::T_USD5M:
 
+                //// 新値足表示
+                $tmpShinnneashiElement = $myShinneashi->getElement_dtime(strtotime($chartElement->date), 0);
+                if (strtotime($tmpShinnneashiElement->date) == strtotime($chartElement->date)) {
+
+                    //// ==== この日時（$chartElement->date）に新値足がある場合はそれが採用される
+                    $resultArray[] = $myShinneashi->html_getShinneashiStatus($tmpShinnneashiElement);
+
+                } else {
+
+                    $resultArray[] = '<td>&nbsp;</td>';
+                }
+
+                //// ==== 画面表示エリアが狭いので短縮形の日時表記で固定
+                $resultArray[] = '<td>'.date('n/j H:i', strtotime($chartElement->date)).'</td>';
+
+                //// 増田足6色パターン
+                $resultArray[] = '<td>'.$myShinneashi->getMasudaashi()->writeSixPtnValue($myShinneashi->getMasudaashi()->getElementNum_DTime(strtotime($chartElement->date))).'</td>';
+
                 $resultArray[] = '<td>'.$myShinneashi->getPriceColumnValueStr($chartElement->bid).'</td>';
                 $resultArray[] = '<td>'.$myShinneashi->getPriceColumnValueStr($chartElement->ask).'</td>';
                 break;
 
             default:
-                //////// どちらのケースのも該当しない異常ケース（こういうハンドリングは良い習慣）
-                throw new UnexpectedCaseException($theMeigaraCd, UnexpectedCaseException::T_CASE_SWITCH);
+
+                //////// 2023.10.07 BillionStuffRevolution個別銘柄対応
+
+                //// 新値足表示
+                $tmpShinnneashiElement = $myShinneashi->getElement_dtime(strtotime($chartElement->date), 0);
+                if (strtotime($tmpShinnneashiElement->date) == strtotime($chartElement->date)) {
+
+                    //// ==== この日時（$chartElement->date）に新値足がある場合はそれが採用される
+                    $resultArray[] = $myShinneashi->html_getShinneashiStatus($tmpShinnneashiElement);
+
+                } else {
+
+                    $resultArray[] = '<td>&nbsp;</td>';
+                }
+
+                $resultArray[] = '<td>'.date('Y/n/j', strtotime($chartElement->date)).'</td>';
+
+                //// 増田足6色パターン
+                //// 増田足6色パターン
+                $resultArray[] = '<td>'.$myShinneashi->getMasudaashi()->writeSixPtnValue($myShinneashi->getMasudaashi()->getElementNum_DTime(strtotime($chartElement->date))).'</td>';
+
+                $resultArray[] = '<td align=right>'.getPriceValueStr($chartElement->close_value / 100, $chartElement->close_value / 100).'</td>';
                 break;
 
         }  // -- end of switch()

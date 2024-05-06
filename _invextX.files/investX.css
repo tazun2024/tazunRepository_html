@@ -152,4 +152,7 @@ opacity:0.8;
   background-color: black;
 */
   display:flex;
+
+/* 2023.10.09 欄外コメント用（scDisplayより）*/
+div.FLOATCLEAR {clear:both; color:lightgray;}
 }

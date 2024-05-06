@@ -34,6 +34,7 @@ include(APP_ROOT.APP_TYPE.'/_BSCONF.php');
 
 //////// ログ生成
 $myCmxLog = new CmxLog(APP_ROOT.APP_TYPE.'/View/Logs/'.APP_TYPE.date('Ymd_H00').'.view.log');
+$myCmxLog->setLoggingLevel(CmxLog::T_LOGGING_DEBUG);
 
 //////// DAO生成
 include(APP_ROOT.APP_TYPE.'/Business/BS_BusinessBase.php');
@@ -123,7 +124,7 @@ if ($showTopDatetimeStr > $myShinneashi->getFlopElement_dtime($showTargetDtime, 
 
 // ◆増田足も同時に表示するモード
 $myMasudaashi = new CreateMasudaashi($myCmxLog, $myBSDao);
-// ==== ここでは、本当に欲しい日時をinit()に伝えて、その中で適切な本数を取得するクエリを作って取得してもらう
+// ==== CreateMasudaashi.init()では、本当に欲しい日時$showTargetDtimeStrをinit()に伝えて、その中で適切な本数を取得するクエリを作って取得してもらう
 $myMasudaashi->init(CoreBase::T_N225M, $showTopDatetimeStr, getLoggingDatetimeStr_fromDtime($showTargetDtime));
 $myShinneashi->setMasudaashi($myMasudaashi);
 

@@ -33,7 +33,7 @@
 
 
             //////// //////// //////// ////////
-            $url = 'http://ik1-326-23246.vs.sakura.ne.jp/FxStar/%5Eact/View/tmp.selectResultFs.php?execQuery='.str_replace(' ', '%20', "select meigara_cd,date,side,value,price from FS_ADMIN where meigara_cd='SM_FX'&dTimeColumn=date&");
+            $url = 'https://ik1-326-23246.vs.sakura.ne.jp/FxStar/%5Eact/View/tmp.selectResultFs.php?execQuery='.str_replace(' ', '%20', "select meigara_cd,date,side,value,price from FS_ADMIN where meigara_cd='SM_FX'&dTimeColumn=date&");
             //////// //////// //////// ////////
 
             // curl初期化

@@ -9,15 +9,15 @@
 ////define('HTTP_ROOT',   'C:/_developmentWork/xampp/htdocs/_html/'); //// scDisplay.phpで定義された
 
 
-    // ==== ==== ==== ====
+    // ==== ==== ==== ==== 
     // ==== ==== ==== ==== 定数設定
-    // ==== ==== ==== ====
+    // ==== ==== ==== ==== 
 ////define('DOMAIN_ROOT', HTML_ROOT.'domain/');                       //// scDisplay.phpで定義された
 
 
-    // ==== ==== ==== ====
+    // ==== ==== ==== ==== 
     // ==== ==== ==== ==== 必要なファイルをinclude
-    // ==== ==== ==== ====
+    // ==== ==== ==== ==== 
     include(APP_ROOT.'COMMON/Util/NewSimpleUtil.php');
     include(APP_ROOT.'COMMON/Util/CMX_common.php');
 
@@ -320,7 +320,7 @@ function getMeigaraArr($pattern) {
 
   $codeArray = array();
 
-  //
+  // 
   include(__DIR__."/search_addIndexCode.php");
 
   $codeArray[] ='1001'; // 日経225指数
@@ -465,7 +465,7 @@ function getMeigaraNm($targetCode) {
 
 function getMeigaraShortNm($targetCode) {
 
-  $url = "https://ik1-326-23246.vs.sakura.ne.jp/SAKURA_API/MY_MA_getMeigaraNm.php?TARGET_CD=".$targetCode;
+  $url = "http://ik1-326-23246.vs.sakura.ne.jp/SAKURA_API/MY_MA_getMeigaraNm.php?TARGET_CD=".$targetCode;
 
   // curl初期化
   $ch = curl_init($url);

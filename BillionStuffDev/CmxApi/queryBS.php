@@ -24,18 +24,28 @@ $queryStr = @$_REQUEST['QUERY'] ?: '';
 if (mb_strpos(strtoupper($queryStr), 'SELECT') === 0) { // ¶selectから始まる文字列であること
 
     include(APP_ROOT.APP_TYPE.'/CmxApi/BS_ExecQuery.php');
-    $contentsArr = (new BS_ExecQuery($myCmxLog))->execQuery($queryStr);
+
+    try {
+
+        $contentsArr = (new BS_ExecQuery($myCmxLog))->execQuery($queryStr);
+
+    } catch (Throwable $th) {
+
+        $myCmxLog->err($th->getTraceAsString());
+        $contentsArr[] = $th->getTraceAsString();
+    }
 
 } else {
 
-    $contentsArr = ['invalid QUERY ['.$queryStr.']'];
+    $contentsArr = ['no row(s)'];
+    $contentsArr[] = 'invalid QUERY ['.$queryStr.']';
 }
 
 
 $VIEW = array();
 
 // // // // // // // // // // // // // // // // htmlページ生成 // // // // // // // // // // // // // // // //
-$VIEW['TITLE'] = 'CmxApi FxStar';
+$VIEW['TITLE'] = 'CmxApi BillionStuff';
 $VIEW['DIR'] = '<B><font STYLE="font-size: 8px;">'.__DIR__.'</font></B><br>';
 $VIEW['CONTENTS'] = $contentsArr;
 include(HTML_ROOT.'COMMON/View/view.html');

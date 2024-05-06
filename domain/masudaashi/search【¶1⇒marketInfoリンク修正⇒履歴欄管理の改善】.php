@@ -240,20 +240,23 @@ echo "<div class='green'>";
         $meigaraNm = ' '.getMeigaraNm($targetCode);
 
         if ( mb_strpos($dummyResult, 'no_img') === false
-         and $targetCode <> '1001'
-         and $targetCode <> '1009'
+        //and $targetCode <> '1001' // 2023.10.09 BillionStuffRevolution対応で除外
+         //and $targetCode <> '1009' // 2023.10.09 BillionStuffRevolution対応で除外
          and $targetCode <> '1021'
          and $targetCode <> '1003'
-         and $targetCode <> '1052'
-         and $targetCode <> '1081' ) {
+         //and $targetCode <> '1081' // 2023.10.09 BillionStuffRevolution対応で除外
+         and $targetCode <> '1052' ) {
 
           // ==== 新しいcfgファイルに書き替え
           unlink($cfgFile);
 
           $existArr = array();
           error_log("<?PHP". "\n", 3, $cfgFile);
-          error_log("\$historyArr[] = \"".$targetCode.(mb_strlen($meigaraNm) <= 14 ? $meigaraNm : left($meigaraNm, 14).'...')."\";". "\n", 3, $cfgFile);
-          $existArr[] = $targetCode.$meigaraNm;
+
+          // ==== 今回の表示銘柄を追加
+          $history = $targetCode.(mb_strlen($meigaraNm) <= 14 ? $meigaraNm : left($meigaraNm, 14).'...');
+          error_log("\$historyArr[] = \"".$history."\";". "\n", 3, $cfgFile);
+          $existArr[] = $history;
 
           $count = 1;
           foreach ($historyArr as $history) {
@@ -267,6 +270,7 @@ echo "<div class='green'>";
               if ($count >= 32) break;
             }
           }
+
           error_log("?>". "\n", 3, $cfgFile);
         }
 
@@ -280,6 +284,7 @@ echo "<div class='green'>";
         echo "<input type='submit' value='analyze'>\n";
 
         echo "<A href='https://cmx.boy.jp/html/domain/masudaashi/search0.php?TARGET_CODE=".$targetCode."'>＜search0＞</A>";
+        echo "<A href='https://cmx.boy.jp/html/BillionStuffRevolutionStg/View/indexBSR.php?MEIGARA_CD=".$targetCode."'>＜BillionStuffRevolution＞</A>";
         if (mb_strpos($dummyResult, 'MY_MA_5M=EXIST') !== false) {
           echo "<A href='http://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/MY_MASUDAASHI_5M.php?TARGET_CODE=".$targetCode."'>[5分足 ".$targetCode."]</A>\n";
         }

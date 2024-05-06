@@ -204,11 +204,11 @@
             $logMsgArr[] = '';
 
             $requestParm = '?TARGET_CODE='.$targetCode.'&TARGET_DATE='.$targetDate.'&BACHU_TMP_REQUEST='.$bachuTmpRequest;
-            $dummyResult = file_get_contents('https://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/MY_MA_requestHandler.php'.$requestParm);
+            $dummyResult = file_get_contents('http://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/MY_MA_requestHandler.php'.$requestParm);
 
            if (mb_strpos($dummyResult, 'no_img') === false) {
 
-               $sakuraUrl = 'https://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/_fileWork/';
+               $sakuraUrl = 'http://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/_fileWork/';
                $putFileNameBase = '_'; // ¶ここにリクエストごとのハッシュ値を設定すれば不特定多数からのリクエストに対応できる
 
                // ==== 画像ファイルを取得
