@@ -87,6 +87,25 @@ if ($showTargetDtime !== ''
         $showTargetDtime = strtotime('+15 day', $showTargetDtime);
 }
 
+
+//////// 2024.01.26 FX通貨の表示不具合対応
+switch($meigaraCd) {
+
+    case '1003':
+        header('Location:../../'.'FxStar'.ENV_NAME.'/View/indexFS.php?SYMBOL_CODE=USD5M');
+        exit();
+        break;
+
+    case '1052':
+        header('Location:../../'.'FxStar'.ENV_NAME.'/View/indexFS.php?SYMBOL_CODE=AUD5M');
+        exit();
+        break;
+default:
+        break;
+
+}  // -- end of switch()
+
+
 //////// 指定されたFLOP_DTSTRまでが$showTargetDtimeとして表示対象になる
 //       では、どこからが表示対象かというと「$showTargetDtimeから遡るflop数」
 define('SHOW_ELEMENTRANGE', 20); // 暫定値element20

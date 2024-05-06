@@ -58,10 +58,30 @@ if ($SQL == '') {
 
     switch($action) {
 
-      case "insert__FS_ADMIN":
+      case 'insert__FS_ADMIN':
 
           break;
 
+      case 'cloneAdmin_CronAUD':
+
+          // クーロンadmin from Prd環境 コンテンツ（CR_FSAUDをコピー）
+          include(HTML_ROOT.APP_TYPE.'/_secure/syncroCopyFsSAKURA_ADMIN.php');
+
+          break;
+
+      case 'synchroFsChart_AUD':
+
+          // FS_CHARTの同期
+          include(HTML_ROOT.APP_TYPE.'/_secure/synchroFsSAKURA_FS_CHART.php');
+
+          break;
+
+      case 'synchroFsChart_USD':
+
+          // FS_CHARTの同期
+          include(HTML_ROOT.APP_TYPE.'/_secure/synchroFsSAKURA_FS_CHART.php');
+
+          break;
 
       default:
 

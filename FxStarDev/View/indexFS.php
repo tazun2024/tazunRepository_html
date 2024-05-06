@@ -47,7 +47,7 @@ include(APP_ROOT.APP_TYPE.'/Dao/FSDao.php');
 //////// 2022.10.10 USD切替え対応
 
 
-$sybolCode = $_REQUEST['SYMBOL_CODE'] ?? CoreBase::T_USD5M;
+$sybolCode = $_REQUEST['SYMBOL_CODE'] ?? CoreBase::T_AUD5M; // 初期表示は豪ドル
 $myFSDao = new FSDao($myCmxLog, 'view_dummyValue', $sybolCode);
 
 // 2023.01.07

@@ -24,21 +24,67 @@
 
 
             $myCmxLog = new CmxLog(__DIR__.'/syncroCopyFS_log/'.date('YmdHis').'.log');
-            $myCmxLog->infEcho('>>execute syncroCopyFsSAKURA_ADMIN');
+            $myCmxLog->infEcho('>>execute synchroSAKURA_FS_CHART');
 
             $myFSDao = new FSDao($myCmxLog, INVESTX_NOT_APPLICABLE_VALUE, CoreBase::T_AUD5M);
 
             //////// クエリの実行
-            $deleteQuery= "delete from FS_ADMIN where meigara_cd in ('CR_FSAUD')";
+            //$deleteQuery= "delete from FS_ADMIN where meigara_cd in ('CR_FSAUD')";
             //echo '$deleteQuery=['.$deleteQuery.']<br><br>';
-            $contentsArr[] = '$deleteQuery=['.$deleteQuery.']<br>';
+            //$myFSDao->getListTypeRecord($deleteQuery);
 
-            $myFSDao->getListTypeRecord($deleteQuery);
+
+            $symbolCd = '';
+            $ym = $_REQUEST['YM'];
+            switch($_REQUEST['action']) {
+
+              case 'synchroFsChart_AUD':
+
+                  if (mb_strlen($ym) == 6 and checkdate(intval(right($ym, 2)), 1, intval(left($ym, 4)))) {
+
+                      $symbolCd = 'AUD';
+                      $startDate = getLoggingDatetimeStr_fromDtime(strtotime($ym.'010000'));
+                      $endDate   = getLoggingDatetimeStr_fromDtime(strtotime(date('Y-m-d 23:59', strtotime('last day of ' . $ym.'01'))));
+
+                  } else {
+
+                      echo '?? YM<br>';
+                      echo $_REQUEST['YM'].'<br>';
+                  }
+                  break;
+
+              case 'synchroFsChart_USD':
+
+                  if (mb_strlen($ym) == 6 and checkdate(intval(right($ym, 2)), 1, intval(left($ym, 4)))) {
+
+                      $symbolCd = 'USD';
+                      $startDate = getLoggingDatetimeStr_fromDtime(strtotime($ym.'010000'));
+                      $endDate   = getLoggingDatetimeStr_fromDtime(strtotime(date('Y-m-d 23:59', strtotime('last day of ' . $ym.'01'))));
+
+                  } else {
+
+                      echo '?? YM<br>';
+                      echo $_REQUEST['YM'].'<br>';
+                  }
+                  break;
+
+              default:
+                  echo '?? symbolCd<br>';
+                  echo $_REQUEST['action'].'<br>';
+                  break;
+
+            }  // -- end of switch()
+
+            if ($symbolCd == '') exit;
+
 
 
             //////// //////// //////// ////////
-            $url = 'https://ik1-326-23246.vs.sakura.ne.jp/FxStarPrd/_secure/execQueryFS2022.php?execQuery='.str_replace(' ', '%20', "select meigara_cd,date,side,value,price from FS_ADMIN where meigara_cd='CR_FSAUD'&dTimeColumn=date&");
+            $url = 'https://ik1-326-23246.vs.sakura.ne.jp/FxStarPrd/_secure/execQueryFS2022.php?execQuery='
+                .str_replace(' ', '%20', "select symbolCd,date,bid,ask from FS_CHART where symbolCd='".$symbolCd
+                    ."' and date >= '".$startDate."' and date <= '".$endDate."'&dTimeColumn=date");
             //////// //////// //////// ////////
+//echo $url.'<br>';
 
             // curl初期化
             $ch = curl_init($url);
@@ -96,40 +142,61 @@
                     echo '1['.$node->childNodes[1]->nodeValue.']<br>';
                     echo '2['.$node->childNodes[2]->nodeValue.']<br>';
                     echo '3['.$node->childNodes[3]->nodeValue.']<br>';
-                    echo '4['.$node->childNodes[4]->nodeValue.']<br>';
                     echo '<br>';
                 }
 
 
                 if (isset($node->childNodes[0])) {
 
-                    $meigaraCd = $node->childNodes[0]->nodeValue;
-                    $date      = $node->childNodes[1]->nodeValue;
-                    $side      = $node->childNodes[2]->nodeValue;
-                    $value     = $node->childNodes[3]->nodeValue;
-                    $price     = $node->childNodes[4]->nodeValue;
+                    $responseSymbolCd = $node->childNodes[0]->nodeValue;
+                    $responseDate     = $node->childNodes[1]->nodeValue;
+                    $responseBid      = $node->childNodes[2]->nodeValue;
+                    $responseAsk      = $node->childNodes[3]->nodeValue;
 
-                    if ($meigaraCd == 'CR_FSAUD') {
-
-                        $SQL = "insert into FS_ADMIN values('CR_FSAUD".                                // meigara_cd
-
-                               "', '".date('Y-m-d H:i', strtotime($date)).                             // date
-                               "', '".$side.                                                           // side
-
-                               // Trimでも消えないスペースって？ 文字コードC2A0
-                               // どうやら、文字コードC2A0とは、「UTF-8の半角スペース」というか、HTMLでいう「&nbsp;」スペースのバイナリで、
-                               //「そこでは改行しないスペース」という意味をもった、通常の半角スペース(20)とは全く別のスペースのようです。
-                               "', '".(str_replace( "\xc2\xa0", '', $value)).                          // value
-
-                               "', ".$price.                                                           // price
-
-                        ")";
-
-                        //echo "<code>".$SQL.';'."</code><br>";
-                        $contentsArr[] = "<code>".$SQL.';'."</code><br>";
+                    if ($responseSymbolCd == $symbolCd) {
 
                         //////// クエリの実行
-                        $myFSDao->getListTypeRecord($SQL);
+                        $registeredRecord = $myFSDao->getFirstRecord_DAO_Sql("select bid, ask from FS_CHART where symbolCd = '".$symbolCd."' and date = '".$responseDate."'");
+
+                        if ($registeredRecord != null) {
+
+                            // 登録済みのレコードが既に存在している場合は差異をチェックして必要ならupdateする
+
+
+                            if ($registeredRecord->bid == intval($responseBid) and $registeredRecord->ask == intval($responseAsk)) {
+
+                                //echo $responseDate.'は一致しています<br>';
+                                //$contentsArr[] = $responseDate.'は一致しています<br>';
+
+                            } else {
+
+                                //echo $responseDate.'は差異があります<br>';
+                                //$contentsArr[] = $responseDate.'は差異があります<br>';
+
+                                //echo $responseDate.' (bid='.$registeredRecord->bid.' ask='.$registeredRecord->ask.') ⇒bid='.$responseBid.' ask='.$responseAsk.'<br>';
+                                $contentsArr[] = $responseDate.' (bid='.$registeredRecord->bid.' ask='.$registeredRecord->ask.') ⇒bid='.$responseBid.' ask='.$responseAsk.'<br>';
+
+                                $SQL = "update FS_CHART set bid =".intval($responseBid).", ask = ".intval($responseAsk)." where symbolCd = '".$symbolCd."' and date = '".$responseDate."'";
+                                //echo $SQL.'<br>';
+                                //$contentsArr[] = $SQL.'<br>';
+
+                                //////// クエリの実行
+                                $myFSDao->getListTypeRecord($SQL);
+                            }
+
+                        } else {
+
+                            // 登録済みのレコードが存在していない場合はinsertする
+
+
+                            $SQL = "insert into FS_CHART values('".$symbolCd."', '".$responseDate."', ".intval($responseBid).", ".intval($responseAsk).")";
+
+                            //echo $responseDate.'は登録されていません<br>';
+                            $contentsArr[] = $responseDate.'を登録します '.$SQL.'<br>';
+
+                            //////// クエリの実行
+                            $myFSDao->getListTypeRecord($SQL);
+                        }
                     }
                 }
             }

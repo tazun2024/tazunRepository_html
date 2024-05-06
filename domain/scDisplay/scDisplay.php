@@ -45,7 +45,8 @@
     // =============================================================================
     // ======== 2020.09.29 ウォッチリストに登録されている銘柄も自動的に登録 ========
 
-    $targetCodeArr = getGMO_PortfolioList($baseUrl, $cookieParamStrBuff);
+    //$targetCodeArr = getGMO_PortfolioList($baseUrl, $cookieParamStrBuff); // ayaya
+    $resultList = getGMO_PortfolioList($baseUrl, $cookieParamStrBuff);
 
     // ======== 2020.09.29 ウォッチリストに登録されている銘柄も自動的に登録 ========
     // =============================================================================
@@ -81,18 +82,15 @@
     $dom = new DOMDocument;
     libxml_use_internal_errors( true ); // これと：ワーニング無視
 
-    if ($result == null) {
-
-        $dispStrArr = array(); // 2023.08.29 Empty string supplied as input 対応
-
-    } else {
+    $dispStrArr = array(); // 2023.08.29 Empty string supplied as input 対応
+    if ($result != null) {
 
         $dom->loadHTML($result); // ★null✓
 
         libxml_clear_errors();              //   これ：ワーニング無視
         $xpath = new DOMXPath($dom);
 
-
+/* 2024.05.06 処理の一本化
         // ---------------- 銘柄コードを配列に取得する
         //       各 <tr class="is-selectable" data-selectable>～</tr> タグ内にある
         //         各 <td id="securityCode～" class="col-01">9142</td> タグをnodeとしてarrayで取得
@@ -106,7 +104,12 @@
         // ---------------- 昨営業日との差を配列に取得する
         //       各 <tr class="is-selectable" data-selectable>～</tr> タグ内にある
         //         各 <div id="previousDaysDiffMargin～" class="is-minus">-33 (-1.1<span class="percent">%</span>)</div> タグの内容だけをnodeとしてarrayで取得
-          $nodeArray_previousDaysDiffMargin = $xpath->query("//tbody//tr[contains(@class, 'is-selectable')]//div[contains(@id, 'previousDaysDiffMargin')]");
+        $nodeArray_previousDaysDiffMargin = $xpath->query("//tbody//tr[contains(@class, 'is-selectable')]//div[contains(@id, 'previousDaysDiffMargin')]");
+*/
+        $nodeArray_securityCode           = $resultList->CODE;
+        $nodeArray_currentPrice           = $resultList->PRICE;
+        $nodeArray_previousDaysDiffMargin = $resultList->MARGIN;
+
 
         $idxNum = 0;
         $dispStrArr = array();

@@ -23,15 +23,13 @@
     // ==== ==== ==== ==== 
     // ==== ==== ==== ==== 必要なファイルをinclude
     // ==== ==== ==== ==== 
-    // 2024.03.09 search_common.phpを追加したので不要 // include(APP_ROOT.'COMMON/Util/NewSimpleUtil.php');
+    include(APP_ROOT.'COMMON/Util/NewSimpleUtil.php');
   //include(APP_ROOT.'COMMON/Log/CmxLog.php');
   //include(APP_ROOT.'COMMON/Cfg/CmxCfg.php');
   //include(APP_ROOT.'COMMON/Mail/CmxMailSender.php');
   //include(APP_ROOT.'COMMON/Mail/_MAILconf.php');
     include(APP_ROOT.'COMMON/Util/webAccessUtil.php');
-    // 2024.03.09 search_common.phpを追加したので不要 // include(APP_ROOT.'COMMON/Util/CMX_common.php');
-
-    include(DOMAIN_ROOT.'masudaashi/search_common.php'); // 2024.03.09 getMeigaraNm()が使いたくて追加
+    include(APP_ROOT.'COMMON/Util/CMX_common.php');
 
 
 ////$yorimaeGraphOutputDir = DOMAIN_ROOT.'marketInfo/_fileWork/';
@@ -55,69 +53,30 @@
   $targetCode = @$_REQUEST["TARGET_CODE"];
   if (mb_strlen($targetCode) <> 4 or !is_numeric($targetCode)) $targetCode = "";
 
-  if ($targetCode <> "") {
+  $targetDate = @$_REQUEST["TARGET_DATE"];
+  if (mb_strlen($targetDate) <> 8 or !is_numeric($targetDate)) {
 
-      echo '<TABLE>';
+    $targetDate = getBcakToDaysYMD(date('Ymd1200'), 0);
 
-      echo '<TR>';
-      echo '<TD style="background:darkseagreen; color:white; font-weight:bold;">';
-      echo '<span style="letter-spacing:0.5em;">&nbsp;</span>'.$targetCode.' '.getMeigaraNm($targetCode).'<span style="letter-spacing:0.5em;">&nbsp;</span>';
-      echo '</TD>';
-      echo '</TR>';
+    if ($targetCode <> "") {
 
-      $targetDate = @$_REQUEST["TARGET_DATE"];
-      if (mb_strlen($targetDate) <> 8 or !is_numeric($targetDate)) {
+            // ================ 裁定残のグラフを取得する
+            $result = file_get_contents("https://karauri.net/".$targetCode."/sokuhou/");
 
-          $targetDate = getBcakToDaysYMD(date('Ymd1200'), 0);
-
-
-
-          // ================ 裁定残のグラフを取得する
-          // 2024.04.01 9468//https://chart.googleapis.com/chart?chs=360x150&chf=bg,s,f8f8f8&chdl=%E7%A9%BA%E5%A3%B2%E6%99%82%E4%BE%A1%E7%B7%8F%E9%A1%8D|%E5%A3%B2%E5%A2%97&chco=FF0000,00FF00&chls=0.5,0,0|0.5,0,0&cht=lc&chd=t2:-1,1334467,761649,602849,531942,800019,628000,551376,1075848,1097874,1058742,907963,1018820,546287,546069,621089,622204,640428,708722,917834,2106120,936225,837925,647478,1197285,923687,1119190,957915,1172683,936200,1108038,1789424,1319316,1185180,1676701,1754004,2768063,935610,689720,131021,-1|-1,791278,238230,279901,304035,380622,244575,210282,274467,266182,254301,299005,373286,193146,236368,303133,239999,334192,407942,482049,931835,333274,431662,356566,288448,486809,341911,378423,698967,646968,630802,375489,372147,264477,873836,754976,332174,281833,282657,37206,-1|-1,3701,3726,3742,3755,3741,3719,3766,3826,3887,3899,3934,3980,3972,3972,3952,4009,4065,4057,4055,4035,4076,4152,4136,4129,4101,4104,3997,3973,3991,3985,3996,4041,4088,4196,4224,4195,4180,4198,4183,-1|-1,3705,3729,3760,3784,3763,3728,3774,3839,3893,3912,3953,4014,3990,3998,3966,4025,4082,4072,4072,4042,4081,4180,4147,4134,4193,4121,4050,3996,4067,4006,3999,4045,4107,4215,4255,4233,4192,4203,4219,-1|-1,3764,3730,3752,3775,3751,3749,3825,3826,3938,3914,3959,3995,3988,3982,3971,4058,4066,4073,4068,4067,4144,4162,4166,4162,4108,4115,4031,4030,4016,4030,4016,4122,4146,4232,4243,4195,4197,4227,4192,-1|-1,3764,3749,3780,3784,3784,3754,3833,3867,3942,3923,3961,4031,3999,4020,3979,4063,4090,4090,4078,4074,4150,4187,4175,4168,4201,4150,4051,4030,4067,4031,4027,4122,4148,4237,4264,4238,4206,4250,4227,-1&chds=0,2768063,0,2768063,3700,4300&chm=F,0044FF,2,,4,-1&chxt=x,r&chxl=0:||||||||02/08||||||||02/21||||||||03/05||||||||03/15||||||||03/28||1:|37000|38200|39400|40600|41800|43000&chg=4.8780487804878,10,1,5
-
-          // contextを渡してあげればいいようで、試したところ指定したtimeoutは秒数っぽいです
-          $context = stream_context_create([
-              'http' => [
-                  'timeout' => 2
-              ]
-          ]);
-          $result = file_get_contents("https://karauri.net/".$targetCode."/sokuhou/", false, $context);
+            $dom = new DOMDocument;
+            libxml_use_internal_errors( true ); // これと：ワーニング無視
+            $dom->loadHTML($result);
+            libxml_clear_errors();              //   これ：ワーニング無視
+            $xpath = new DOMXPath($dom);
 
 
-          $dom = new DOMDocument;
-          libxml_use_internal_errors( true ); // これと：ワーニング無視
-          if (!empty($result)) {
-
-              $dom->loadHTML($result);
-
-              echo '<TR>';
-              echo '<TD style="color:lightgray;">';
-              echo '＜裁定残のグラフを取得する＞';
-              echo '</TD>';
-              echo '</TR>';
-
-          } else {
-
-              echo '<TR>';
-              echo '<TD style="color:lightgray;">';
-              echo '＜裁定残のグラフを取得する is empty＞';
-              echo '</TD>';
-              echo '</TR>';
-          }
-          libxml_clear_errors();              //   これ：ワーニング無視
-          $xpath = new DOMXPath($dom);
-
-          // ---- body 内の
-          //       <img class="oc" src="～> タグ内のsrcの値を取得
-          //
-          $node = $xpath->query("//body//img[contains(@class, 'oc')]/@src")[0];
-          if (!is_null($node))  file_put_contents(DOMAIN_ROOT.'saiteizanDailyChart/_fileWork/'.$targetCode.".".date('Ymd', strtotime($targetDate)).".png", file_get_contents($node->nodeValue));
-
-      }
-
-      echo '</TABLE>';
-
-//} 
+            // ---- body 内の
+            //       <img class="oc" src="～> タグ内のsrcの値を取得
+            //
+            $node = $xpath->query("//body//img[contains(@class, 'oc')]/@src")[0];
+            if (!is_null($node))  file_put_contents(DOMAIN_ROOT.'saiteizanDailyChart/_fileWork/'.$targetCode.".".date('Ymd', strtotime($targetDate)).".png", file_get_contents($node->nodeValue));
+    }
+  }
 
 
     $yorimaeGraphOutputDir = DOMAIN_ROOT.'marketInfo/_fileWork/';
@@ -125,7 +84,7 @@
     $saiteizanChartDir = DOMAIN_ROOT.'saiteizanDailyChart/_fileWork/';
     $yahooChartDir     = DOMAIN_ROOT.'yahooDailyChart/_fileWork/'.$targetDate.'/';
 
-//if ($targetCode <> "") {
+  if ($targetCode <> "") {
 
         // ================ 自動処理で取得済みの「寄付き前marketOrder情報」を元に描画用グラフデータを生成する
 
@@ -414,7 +373,7 @@ echo "<body>\n";
 
   echo '<TR>';
   echo '<TD>';
-  // ==== 日付指定用form表示https://cmx.boy.jp/tazun/index.files/MY_MA.png
+  // ==== 日付指定用form表示
   echo "<nobr>\n";
   echo "<form action='./marketInfo.php' method='get'>";
   echo "TARGET DATE <input type='text' size='20' name='TARGET_DATE' value='".$targetDate."'>";
@@ -423,8 +382,8 @@ echo "<body>\n";
   echo "</form>";
   echo '</TD>';
   echo '<TD>';
-  echo "&nbsp;</span><a href=https://cmx.boy.jp/html/domain/masudaashi/search.php?TARGET_CD=".$targetCode."><img width=48 src=../masudaashi/_img/linkMY_MA.png></a>";
-  echo "&nbsp;</span><a href=https://finance.yahoo.co.jp/quote/".$targetCode."/chart><img width=48 src=../masudaashi/_img/linkYahoo.png></a>";
+  echo "&nbsp;</span><a href=http://aoyoko2.com/masudaashi/search.php?TARGET_CD=".$targetCode."><font size=-1>MY_MA</font></a>";
+  echo "&nbsp;</span><a href=https://finance.yahoo.co.jp/quote/".$targetCode."/chart><font size=-1>Yahooチャート</font></a>";
   echo "</nobr>\n";
   echo '</TD>';
   echo '</TR>';
@@ -442,230 +401,17 @@ echo "<body>\n";
   echo '</TD>';
   echo '</TR>';
 */
+  echo '</table>';
 
-  $currentDtime = time();
-  $secondFriday = strtotime('second friday', strtotime('-1 day', strtotime(date('Ym01', $currentDtime)))); // 前月末日から見て第二金曜日のYmdを計算する
-  //echo '<TR>';
-  //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-  //echo '今月の第二金曜日'.date('Y-m-d', $secondFriday);
-  //echo '</TD>';
-  //echo '</TR>';
-  if (strtotime(date('Ymd', $currentDtime)) <= strtotime(date('Ymd', $secondFriday))
-   and strtotime(date('Ymd', $currentDtime)) >= strtotime('-4 day', strtotime(date('Ymd', $secondFriday)))
-   and (date('n', $secondFriday) == '3' or date('n', $secondFriday) == '6' or date('n', $secondFriday) == '9' or date('n', $secondFriday) == '12')) {
-
-      // ---- 今日は、メジャーSQのある月の「メジャーSQ日の前」かつ「その週の近辺」
-
-      // 第二金曜日前の営業日の並びを先ず取得する
-      $checkDtime = strtotime(date('Ymd0845', $secondFriday));
-      $check = (getNextGoDaysYMD(date('Ymd', $checkDtime), '0') == date('Ymd', $checkDtime)) ? '○' : '休';          // 金曜日の状態
-      $checkDtime = strtotime('-1 day', $checkDtime);
-      $check = ((getNextGoDaysYMD(date('Ymd', $checkDtime), '0') == date('Ymd', $checkDtime)) ? '○' : '休').$check; // 木曜日の状態
-      $checkDtime = strtotime('-1 day', $checkDtime);
-      $check = ((getNextGoDaysYMD(date('Ymd', $checkDtime), '0') == date('Ymd', $checkDtime)) ? '○' : '休').$check; // 水曜日の状態
-      $checkDtime = strtotime('-1 day', $checkDtime);
-      $check = ((getNextGoDaysYMD(date('Ymd', $checkDtime), '0') == date('Ymd', $checkDtime)) ? '○' : '休').$check; // 火曜日の状態
-      $checkDtime = strtotime('-1 day', $checkDtime);
-      $check = ((getNextGoDaysYMD(date('Ymd', $checkDtime), '0') == date('Ymd', $checkDtime)) ? '○' : '休').$check; // 月曜日の状態
-
-      $dayStrArr = array('(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)');
-      //echo '<TR>';
-      //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-      //echo $check;
-      //echo '</TD>';
-      //echo '</TR>';
-      switch($dayStrArr[date('w', $currentDtime)]) {
-
-          //
-          // ＳＱの売り崩し／買い上りにご用心
-          //
-          // 株式調査ファイル
-          // 2024/3/8 17:25
-          //
-          // 株式市場は８日のメジャーＳＱ（特別清算指数）を前に大波乱の展開になった。
-          // ヘッジファンドなど日経２２５先物の売り方は、これまで３カ月間、巨額の損失を強いられてきた。
-          // それだけに、この日は禁じ手とも言える「最終売買日の売り崩し」を以前から周到に準備していたのかもしれない。
-          // 通常の相場であれば、売り仕掛けはＳＱ２日前までで自粛するのが慣習である。
-          // ＳＱ前日の売り仕掛けは規制当局の調査対象になりやすい。
-          // そのためＳＱ２日前が「急落の急所」と恐れられてきたわけだが、今回はそんな紳士協定も守れないほど売り方は窮地に立たされていたのだろう。
-          //
-
-          case '(月)':
-
-              //echo '<TR>';
-              //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-              //echo '(月)'.$check;
-              //echo '</TD>';
-              //echo '</TR>';
-
-              if ($check == '○○休休休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '明日'.date('n/j', strtotime('+1 day', $currentDtime)).$dayStrArr[date('w', strtotime('+1 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif ($check == '○休休休休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '本日'.date('n/j', $currentDtime).$dayStrArr[date('w', $currentDtime)].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif ($check == '○休休休○') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '次営業日'.date('n/j', strtotime('+4 day', $currentDtime)).$dayStrArr[date('w', strtotime('+4 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-              }
-
-              break;
-
-
-          case '(火)':
-
-              //echo '<TR>';
-              //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-              //echo '(火)'.right($check, 4);
-              //echo '</TD>';
-              //echo '</TR>';
-
-              if (right($check, 4) == '○○休休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '明日'.date('n/j', strtotime('+1 day', $currentDtime)).$dayStrArr[date('w', strtotime('+1 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif (right($check, 4) == '○休休休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '本日'.date('n/j', $currentDtime).$dayStrArr[date('w', $currentDtime)].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif (right($check, 4) == '○休休○') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '次営業日'.date('n/j', strtotime('+3 day', $currentDtime)).$dayStrArr[date('w', strtotime('+3 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-              }
-
-              break;
-
-
-          case '(水)':
-
-              //echo '<TR>';
-              //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-              //echo '(水)'.right($check, 3);
-              //echo '</TD>';
-              //echo '</TR>';
-
-              if (right($check, 3) == '○○休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '明日'.date('n/j', strtotime('+1 day', $currentDtime)).$dayStrArr[date('w', strtotime('+1 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif (right($check, 3) == '○休休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '本日'.date('n/j', $currentDtime).$dayStrArr[date('w', $currentDtime)].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif (right($check, 3) == '○休○') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '次営業日'.date('n/j', strtotime('+2 day', $currentDtime)).$dayStrArr[date('w', strtotime('+2 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-              }
-              break;
-
-
-          case '(木)':
-
-              //echo '<TR>';
-              //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-              //echo '(木)'.right($check, 2);
-              //echo '</TD>';
-              //echo '</TR>';
-
-              if (right($check, 2) == '○○') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '明日'.date('n/j', strtotime('+1 day', $currentDtime)).$dayStrArr[date('w', strtotime('+1 day', $currentDtime))].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-
-              } elseif (right($check, 2) == '○休') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '本日'.date('n/j', $currentDtime).$dayStrArr[date('w', $currentDtime)].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-              }
-
-              break;
-
-
-          case '(金)':
-
-              //echo '<TR>';
-              //echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-              //echo '(金)'.right($check, 1);
-              //echo '</TD>';
-              //echo '</TR>';
-
-              if (right($check, 1) == '○') {
-
-                  echo '<TR>';
-                  echo '<TD colspan=2 style="background:deeppink; color:white; font-weight:bold;">';
-                  echo '本日'.date('n/j', $currentDtime).$dayStrArr[date('w', $currentDtime)].'はメジャーSQです';
-                  echo '</TD>';
-                  echo '</TR>';
-              }
-
-              break;
-
-
-          default:
-              break;
-
-      }  // -- end of switch()
-  }
-
-
-                  //
-                  // 裁定残グラフ
-                  // https://karauri.net/
-                  //
 
                   echo '<img src=./_fileWork/'.$targetFileMarketOrderImg.'>';
 
-  if (file_exists($saiteizanChartDir.$targetCode.".".$targetDate."__.png")) {
+  if (file_exists($saiteizanChartDir.$targetCode.".".$targetDate.".png")) {
 
-                  //echo '<a href=https://karauri.net/'.$targetCode.'/sokuhou/><img src=../saiteizanDailyChart/_fileWork/'.$targetCode.'.'.$targetDate.'.png></a>';
-                  echo '<a href=https://karauri.net/'.$targetCode.'><img src=../saiteizanDailyChart/_fileWork/'.$targetCode.'.'.$targetDate.'__.png></a>';
+                  echo '<a href=https://karauri.net/'.$targetCode.'/sokuhou/><img src=../saiteizanDailyChart/_fileWork/'.$targetCode.'.'.$targetDate.'.png></a>';
   } else {
 
-                  echo '<a href=https://karauri.net/'.$targetCode.'><img src=./_fileWork/no_saiteizanChart.png></a>';
+                  echo '<a href=https://karauri.net/'.$targetCode.'/sokuhou/><img src=../saiteizanDailyChart/_fileWork/no_chart.png></a>';
   }
 
                   echo '<br>';
@@ -821,14 +567,12 @@ echo "<span style='margin-right:60px;'></span><a href=https://karauri.net/chart_
   // ==== 銘柄コード指定用form表示
   echo "<form action='./marketInfo.php' method='get'>\n";
 
-  if ($targetCode <> "") {
-      if (file_exists($yahooChartDir.$targetCode.'.'.$targetDate.'.png')) {
+  if (file_exists($yahooChartDir.$targetCode.'.'.$targetDate.'.png')) {
 
-                      echo '<img src=../yahooDailyChart/_fileWork/'.$targetDate.'/'.$targetCode.'.'.$targetDate.'.png>';
-      } else {
+                  echo '<img src=../yahooDailyChart/_fileWork/'.$targetDate.'/'.$targetCode.'.'.$targetDate.'.png>';
+  } else {
 
-                      echo '<img src=../yahooDailyChart/_fileWork/no_chart.png>';
-      }
+                  echo '<img src=../yahooDailyChart/_fileWork/no_chart.png>';
   }
 
   echo '<br>';

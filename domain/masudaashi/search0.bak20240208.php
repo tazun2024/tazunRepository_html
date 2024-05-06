@@ -83,20 +83,11 @@
 
         $sixClrDistributionLinkStr = '';
         $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1001'.$sixClrDistributionLinkStr.'>1001 日経２２５種平均</a><br>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1009'.$sixClrDistributionLinkStr.'>1009 東証マザーズ指数</a><br>';
         $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1021'.$sixClrDistributionLinkStr.'>1021 ミニ２２５先物（中心限月）</a><br>';
         $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1003'.$sixClrDistributionLinkStr.'>1003 米ドル／円</a><br>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1052'.$sixClrDistributionLinkStr.'>1052 豪ドル／円</a><br>';
         $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=1081'.$sixClrDistributionLinkStr.'>1081 ダウ工業株３０種平均</a><br>';
         $leftContentsArr[] = '<hr>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=7342'.$sixClrDistributionLinkStr.'>7342 ウェルスナビ(株)</a><br>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=9828'.$sixClrDistributionLinkStr.'>9828 元気寿司(株)</a><br>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=4540'.$sixClrDistributionLinkStr.'>4540 (株)ツムラ</a><br>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=8252'.$sixClrDistributionLinkStr.'>8252 (株)丸井グループ</a><br>';
-        $leftContentsArr[] = '<a href=./search0.php?TARGET_CODE=9468'.$sixClrDistributionLinkStr.'>9468 (株)ＫＡＤＯＫＡＷＡ</a><br>';
-        $leftContentsArr[] = '<hr>';
-
-        $leftContentsArr[] = '<a href=https://cmx.boy.jp/html/domain/masudaashi/search.php?TARGET_CD='.$targetCode.$sixClrDistributionLinkStr.'>search.php?TARGET_CD='.$targetCode.'</a><br>';
+        $leftContentsArr[] = '<a href=https://cmx.boy.jp/html/domain/masudaashi/search.php?TARGET_CD='.$targetCode.$sixClrDistributionLinkStr.'>'.$targetCode.'</a><br>';
 
 
 
@@ -115,8 +106,8 @@
             $rightContentsArr[] = '<div style="color:lightgray;">右側のメインコンテンツ</div>';
 
             $rightContentsArr[] = "<nobr>\n";
-            $rightContentsArr[] = "<form action='./search0.php' method='get'>\n";
-            $rightContentsArr[] = "<input type='text' size='20' name='TARGET_CODE' value='".$targetCode."'>\n";
+            $rightContentsArr[] = "<form action='./search.php' method='get'>\n";
+            $rightContentsArr[] = "<input type='text' size='20' name='TARGET_CD' value='".$targetCode."'>\n";
             $rightContentsArr[] = "<input type='submit' value='analyze'>\n";
 
             $rightContentsArr[] = "&nbsp;</span><a href=https://cmx.boy.jp/html/domain/marketInfo/marketInfo.php?TARGET_CODE=".$targetCode."><font size=-1>marketInfo</font></a>";
@@ -215,7 +206,6 @@
             $requestParm = '?TARGET_CODE='.$targetCode.'&TARGET_DATE='.$targetDate.'&BACHU_TMP_REQUEST='.$bachuTmpRequest;
             $dummyResult = file_get_contents('https://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/MY_MA_requestHandler.php'.$requestParm);
 
-
            if (mb_strpos($dummyResult, 'no_img') === false) {
 
                $sakuraUrl = 'https://ik1-326-23246.vs.sakura.ne.jp/BillionStuff/%5Eact/MY_MASUDAASHI/_fileWork/';
@@ -234,10 +224,10 @@
 
                // ==== 新しいcfgファイルに書き替え
 
-            } else {
+          } else {
 
-              $rightContentsArr[] = '暫定メッセージ no_img';
-            }
+            $rightContentsArr[] = '暫定メッセージ no_img';
+          }
 
         } else {
 

@@ -36,7 +36,7 @@ $contentsArr[] = '<input type=hidden name=TAB value=1>';
 $contentsArr[] = '<table>';
 $contentsArr[] = '<tr>';
 $contentsArr[] = '<td>&nbsp;</td>';
-$contentsArr[] = '<td><input type=text name=FLOP_DTSTR value='.date('YmdH00').'></td>';
+$contentsArr[] = '<td><input style="width: 180px" type=text name=FLOP_DTSTR value='.date('YmdH00').'></td>';
 $contentsArr[] = '<td align=right><input style="width: 160px" type=submit value=日時指定新値足表示></td>';
 $contentsArr[] = '</tr>';
 $contentsArr[] = '</table>';
@@ -53,18 +53,26 @@ $contentsArr[] = '</form>';
 $contentsArr[] = '<H1 class=submenu>FS_ADMIN コンテンツ</H1>';
 
 $linkArr = array(
-    'cron USD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_USD5M)."' and (side in ('A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE') ) order by side, date", 'dTimeColumn' => 'date'),
-    'cron USD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FSUSD' order by side, date", 'dTimeColumn' => 'date'),
-    'simu USD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'SM_FSUSD' order by side, date", 'dTimeColumn' => 'date'),
+    'cron USD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_USD5M)."' and (side in ('A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE', 'RST', 'SPT') ) order by side, date", 'dTimeColumn' => 'date'),
+    'cron USD新値足root以外すべて' => array('execQuery' => "(select * from FS_ADMIN where meigara_cd = 'CR_FSUSD' and side not like 'HBAR%' and side not like 'SNBF%' order by side, date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'CR_FSUSD' and side like 'SNBF%' order by date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'CR_FSUSD' and side like 'HBAR%' order by date)", 'dTimeColumn' => 'date'),
+    'simu USD新値足root以外すべて' => array('execQuery' => "(select * from FS_ADMIN where meigara_cd = 'SM_FSUSD' and side not like 'HBAR%' and side not like 'SNBF%' order by side, date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'SM_FSUSD' and side like 'SNBF%' order by date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'SM_FSUSD' and side like 'HBAR%' order by date)", 'dTimeColumn' => 'date'),
     '新値足rootUSD' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = '".CoreBase::getSinneashiMeigaraCd(CoreBase::T_USD5M)."' order by date", 'dTimeColumn' => 'date')
 );
 $contentsArr = array_merge($contentsArr, html_getSelectTableLinkMenu('FS_ADMIN<br>USD', $linkArr));
 $contentsArr[] = '<br><HR align=left width=80% color=silver>';
 
 $linkArr = array(
-    'cron AUD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_AUD5M)."' and (side in ('A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE') ) order by side, date", 'dTimeColumn' => 'date'),
-    'cron AUD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FSAUD' order by side, date", 'dTimeColumn' => 'date'),
-    'simu AUD新値足root以外すべて' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'SM_FSAUD' order by side, date", 'dTimeColumn' => 'date'),
+    'cron AUD監視項目のみ' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = 'CR_FS".CoreBase::getSymbolCd(CoreBase::T_AUD5M)."' and (side in ('A', 'B', 'M_MAX', 'TJM_TIME', 'TJM_PT', 'COLRZONE', 'RST', 'SPT') ) order by side, date", 'dTimeColumn' => 'date'),
+    'cron AUD新値足root以外すべて' => array('execQuery' => "(select * from FS_ADMIN where meigara_cd = 'CR_FSAUD' and side not like 'HBAR%' and side not like 'SNBF%' order by side, date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'CR_FSAUD' and side like 'SNBF%' order by date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'CR_FSAUD' and side like 'HBAR%' order by date)", 'dTimeColumn' => 'date'),
+    'simu AUD新値足root以外すべて' => array('execQuery' => "(select * from FS_ADMIN where meigara_cd = 'SM_FSAUD' and side not like 'HBAR%' and side not like 'SNBF%' order by side, date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'SM_FSAUD' and side like 'SNBF%' order by date)"
+                                                           ." union (select * from FS_ADMIN where meigara_cd = 'SM_FSAUD' and side like 'HBAR%' order by date)", 'dTimeColumn' => 'date'),
     '新値足rootAUD' => array('execQuery' => "select * from FS_ADMIN where meigara_cd = '".CoreBase::getSinneashiMeigaraCd(CoreBase::T_AUD5M)."' order by date", 'dTimeColumn' => 'date')
 );
 $contentsArr = array_merge($contentsArr, html_getSelectTableLinkMenu('FS_ADMIN<br>AUD', $linkArr));
@@ -126,6 +134,7 @@ $contentsArr[] = '</TR>';
 */
 
 $contentsArr[] = '</table>';
+$contentsArr[] = '</form>';
 
 $contentsArr[] = '<BR>';
 
@@ -175,6 +184,49 @@ $contentsArr[] = '<H1 class=submenu>メンテナンス</H1>';
 
 ////////////////////////////////
 //
+// クーロンadmin from Prd環境 コンテンツ（CR_FSAUDをコピー）
+//
+///////////////////////////////
+$linkArr = array(
+    "'CR_FSAUD' from Prd環境" => array('execQuery' => '', 'action' => 'cloneAdmin_CronAUD'),
+);
+$contentsArr = array_merge($contentsArr, html_getSelectTableLinkMenu('クーロンadmin', $linkArr));
+$contentsArr[] = '<br>';
+
+
+////////////////////////////////
+//
+// FS_CHARTの同期 from Prd環境 コンテンツ
+//
+///////////////////////////////
+
+// html_getSelectTableLinkMenu()系の表示を個別に実装（formタグは対応していないため）
+$tableStyle = 'width:96; height:80; text-align:center; vertical-align:top; background:url('.FILECONTENTS_DIR.'Table-icon.png) no-repeat center top;';
+
+$contentsArr[] = '<table>';
+$contentsArr[] = '<tr>';
+$contentsArr[] = '<td rowspan=3 style="'.$tableStyle .'"><b><br>'.'シンクロ<br>FS_CHART'.'</b></td>';
+$contentsArr[] = '</tr>';
+
+$contentsArr[] = '<tr>';
+$contentsArr[] = '<form name=fm0 action=./execQueryFS2022.php?action=synchroFsChart_AUD method=post>';
+$contentsArr[] = '<td align=right><input style="width: 140px" type=submit value="AUD Prd環境と同期"></td>';
+$contentsArr[] = '<td><input style="width: 110px" type=text name=YM value='.date('Ym').'></td>';
+$contentsArr[] = '</form>';
+$contentsArr[] = '</tr>';
+$contentsArr[] = '<tr>';
+$contentsArr[] = '<form name=fm0 action=./execQueryFS2022.php?action=synchroFsChart_USD method=post>';
+$contentsArr[] = '<td align=right><input style="width: 140px" type=submit value="USD Prd環境と同期"></td>';
+$contentsArr[] = '<td><input style="width: 110px" type=text name=YM value='.date('Ym').'></td>';
+$contentsArr[] = '</tr>';
+$contentsArr[] = '</form>';
+$contentsArr[] = '</table>';
+
+$contentsArr[] = '<br><HR align=left width=80% color=silver>';
+
+
+////////////////////////////////
+//
 // ZIP圧縮 コンテンツ
 //
 ///////////////////////////////
@@ -195,12 +247,11 @@ $contentsArr[] = '<br><HR align=left width=80% color=silver>';
 
 ////////////////////////////////
 //
-// ロリポップのINVESTX_ADMINをコピー コンテンツ（CRONをコピー）
+// さくらのINVESTX_ADMINをコピー コンテンツ（CRONをコピー）
 //
 ///////////////////////////////
-$contentsArr = array_merge($contentsArr, html_getLinkMenu('process_icon.png', 'ロリポップADMIN（CRONをコピー）<br>（./syncroCopyFsLOLIPOP_ADMIN.php）', './syncroCopyFsLOLIPOP_ADMIN.php'));
-$contentsArr[] = '<br><HR align=left width=80% color=silver>';
-
+//$contentsArr[] = '<table><tr><td class=nallow><A href=./syncroCopyFsSAKURA_ADMIN.php><img src=/html/_invextX.files/process_icon.png><font size=+1>さくらADMIN（CRONをコピー）（./syncroCopyFsSAKURA_ADMIN.php）</font></A></td></tr></table>';
+//$contentsArr[] = '<br><HR align=left width=80% color=silver>';
 
 ////////////////////////////////
 //

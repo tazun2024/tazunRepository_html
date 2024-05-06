@@ -37,5 +37,5 @@
              * 通貨type
              *
              */
-            $simulationParam->SymbolType = CoreBase::T_USD5M;
+            $simulationParam->SymbolType = $FS_PARAM['FS_EXECUTE_SYMBOLTYPE'];
 ?>

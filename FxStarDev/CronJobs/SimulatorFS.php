@@ -124,16 +124,28 @@
 
 
             /**
+             * シミュレーション開始時の初期化いろいろ
+             *
+             */
+            include(APP_ROOT.APP_TYPE.'/CronJobs/ExecFS.php'); // ¶ExecFSのインスタンスが取れれば何でもいい∵ExecFS->simulation_init()したい
+            include(APP_ROOT.APP_TYPE.'/Obj/FS_Admin.php');    // ¶中でFSAdminのstatic値を使いたい
+            include(APP_ROOT.APP_TYPE.'/Business/FS_BusinessBase.php'); // 2022.09.03 BusinessBaseはAdminがもっている大量のコンスタントを保持するクラスになった
+            include(APP_ROOT.APP_TYPE.'/_FSCONF.php'); // 2023.07.03 USD/AUD環境分離対応
+
+
+            /**
              * シミュレーションパラメータ
              *  AYAYA, noriPなど
              *
              */
             $simulationParam = new stdClass;
             include(HTML_ROOT.APP_TYPE.'/CronJobs/_FSsimulationPARAM.php'); // 2023.07.06 通貨type（内部でCoreBase::を使用）
-
             //////// LEGACY_COMPATIBLE（旧仕様動作）がチェックされれば_FSCONFの設定が上書きされる
             //$simulationParam->FS_LEGACY_COMPATIBLE = ($_REQUEST['legacyCompatible'] ?? false);
             // 2023.07.10 LEGACY_COMPATIBLE廃止（上弦下弦における旧来の仕様再現であったため∵上弦下弦は廃止済み）
+
+
+            (new ExecFS((new FSUtil($myCmxLog, FSUtil::T_CMX_SIMULATION))->getTickDone(INVESTX_NOT_APPLICABLE_NUMBER, $simulationParam->SymbolType)))->simulation_init();
 
 
             /**
@@ -174,11 +186,9 @@
              * シミュレーション開始時の初期化いろいろ
              *
              */
-            include(APP_ROOT.APP_TYPE.'/CronJobs/ExecFS.php'); // ¶ExecFSのインスタンスが取れれば何でもいい∵ExecFS->simulation_init()したい
-            include(APP_ROOT.APP_TYPE.'/Obj/FS_Admin.php');    // ¶中でFSAdminのstatic値を使いたい
-            include(APP_ROOT.APP_TYPE.'/Business/FS_BusinessBase.php'); // 2022.09.03 BusinessBaseはAdminがもっている大量のコンスタントを保持するクラスになった
-            include(APP_ROOT.APP_TYPE.'/_FSCONF.php'); // 2023.07.03 USD/AUD環境分離対応
-            (new ExecFS((new FSUtil($myCmxLog, FSUtil::T_CMX_SIMULATION))->getTickDone(INVESTX_NOT_APPLICABLE_NUMBER, $simulationParam->SymbolType)))->simulation_init();
+
+            // 2024.01.08 宣言順序を変更
+
 
             $myCmxLog->inf('->currentDateTime['.getLoggingDatetimeStr_fromDtime($args->currentDateTime).']');
             $myCmxLog->inf('->breakDateTime['.getLoggingDatetimeStr_fromDtime($args->breakDateTime).']');
